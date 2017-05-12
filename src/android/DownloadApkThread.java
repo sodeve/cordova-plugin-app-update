@@ -33,7 +33,8 @@ public class DownloadApkThread implements Runnable {
     private DownloadHandler downloadHandler;
     private Handler mHandler;
 
-    public DownloadApkThread(Context mContext, Handler mHandler, ProgressBar mProgress, AlertDialog mDownloadDialog, HashMap<String, String> mHashMap) {
+    public DownloadApkThread(Context mContext, Handler mHandler, ProgressBar mProgress, AlertDialog mDownloadDialog,
+                             HashMap<String, String> mHashMap) {
         this.mDownloadDialog = mDownloadDialog;
         this.mHashMap = mHashMap;
         this.mHandler = mHandler;
@@ -41,7 +42,6 @@ public class DownloadApkThread implements Runnable {
         this.mSavePath = Environment.getExternalStorageDirectory() + "/" + "download"; // SD Path
         this.downloadHandler = new DownloadHandler(mContext, mProgress, mDownloadDialog, this.mSavePath, mHashMap);
     }
-
 
     @Override
     public void run() {
@@ -60,15 +60,18 @@ public class DownloadApkThread implements Runnable {
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                 // 获得存储卡的路径
                 URL url = new URL(mHashMap.get("url"));
+                LOG.d(TAG, "URL: " + url.toString());
                 // 创建连接
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.connect();
                 // 获取文件大小
                 int length = conn.getContentLength();
+                LOG.d(TAG, "Length: " + length.toString());
                 // 创建输入流
                 InputStream is = conn.getInputStream();
 
                 File file = new File(mSavePath);
+                LOG.d(TAG, "Dest: " + mSavePath + mHashMap.get("name"));
                 // 判断文件目录是否存在
                 if (!file.exists()) {
                     file.mkdir();

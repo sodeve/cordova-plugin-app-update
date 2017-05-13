@@ -67,7 +67,7 @@ public class DownloadApkThread implements Runnable {
                 conn.connect();
                 // 获取文件大小
                 int length = conn.getContentLength();
-                LOG.d(TAG, "Length: " + length.toString());
+                LOG.d(TAG, "Length: " + length);
                 // 创建输入流
                 InputStream is = conn.getInputStream();
 

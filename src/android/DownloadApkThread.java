@@ -61,7 +61,7 @@ public class DownloadApkThread implements Runnable {
             if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
                 // 获得存储卡的路径
                 URL url = new URL(mHashMap.get("url"));
-                LOG.d(TAG, "URL: " + mHashMap.get("url");
+                LOG.d(TAG, "URL: " + mHashMap.get("url"));
                 // 创建连接
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.connect();

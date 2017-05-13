@@ -37,7 +37,7 @@ public class MsgBox {
      *
      * @param onClickListener
      */
-    public Dialog showNoticeDialog(OnClickListener onClickListener) {
+    public Dialog showNoticeDialog(OnClickListener onClickListener, DialogInterface.OnCancelListener onCancelListener) {
         if (noticeDialog == null) {
             LOG.d(TAG, "showNoticeDialog");
             // 构造对话框
@@ -46,6 +46,7 @@ public class MsgBox {
             builder.setMessage(msgHelper.getString(MsgHelper.UPDATE_MESSAGE));
             // 更新
             builder.setPositiveButton(msgHelper.getString(MsgHelper.UPDATE_UPDATE_BTN), onClickListener);
+            builder.setOnCancelListener(onCancelListener);
             noticeDialog = builder.create();
         }
 

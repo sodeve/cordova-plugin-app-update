@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.DialogInterface.OnCancelListener;
 import android.os.Handler;
 import android.widget.ProgressBar;
 import org.apache.cordova.CallbackContext;
@@ -98,7 +99,7 @@ public class UpdateManager {
                 case Constants.VERSION_NEED_UPDATE:
                     break;
                 case Constants.DOWNLOAD_CANCEL:
-                    callbackContext.success(Utils.makeJSON(Constants.VERSION_NEED_UPDATE, "success, download cancelled."));
+                    callbackContext.success(Utils.makeJSON(Constants.DOWNLOAD_CANCEL, "success, download cancelled."));
                     break;
                 case Constants.VERSION_UP_TO_UPDATE:
                     callbackContext.success(Utils.makeJSON(Constants.VERSION_UP_TO_UPDATE, "success, up to date."));
@@ -147,7 +148,7 @@ public class UpdateManager {
             } else {
                 LOG.d(TAG, "need update");
                 // 显示提示对话框
-                msgBox.showNoticeDialog(noticeDialogOnClick);
+                msgBox.showNoticeDialog(noticeDialogOnClick, noticeDialogOnCancel);
                 mHandler.sendEmptyMessage(Constants.VERSION_NEED_UPDATE);
             }
         } else {
@@ -168,7 +169,6 @@ public class UpdateManager {
     private OnCancelListener noticeDialogOnCancel = new OnCancelListener() {
         @Override
         public void onCancel(DialogInterface dialog) {
-            dialog.dismiss();
             mHandler.sendEmptyMessage(Constants.DOWNLOAD_CANCEL);
         }
     };

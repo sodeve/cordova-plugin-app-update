@@ -96,7 +96,9 @@ public class UpdateManager {
                     callbackContext.success(Utils.makeJSON(Constants.VERSION_UPDATING, "success, version updating."));
                     break;
                 case Constants.VERSION_NEED_UPDATE:
-                    callbackContext.success(Utils.makeJSON(Constants.VERSION_NEED_UPDATE, "success, need date."));
+                    break;
+                case Constants.DOWNLOAD_CANCEL:
+                    callbackContext.success(Utils.makeJSON(Constants.VERSION_NEED_UPDATE, "success, download cancelled."));
                     break;
                 case Constants.VERSION_UP_TO_UPDATE:
                     callbackContext.success(Utils.makeJSON(Constants.VERSION_UP_TO_UPDATE, "success, up to date."));
@@ -160,6 +162,14 @@ public class UpdateManager {
         public void onClick(DialogInterface dialog, int which) {
             dialog.dismiss();
             mHandler.sendEmptyMessage(Constants.DOWNLOAD_CLICK_START);
+        }
+    };
+
+    private OnCancelListener noticeDialogOnCancel = new OnCancelListener() {
+        @Override
+        public void onCancel(DialogInterface dialog) {
+            dialog.dismiss();
+            mHandler.sendEmptyMessage(Constants.DOWNLOAD_CANCEL);
         }
     };
 

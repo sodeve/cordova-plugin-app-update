@@ -11,6 +11,8 @@ public interface Constants {
     /* 点击开始下载按钮*/
     int DOWNLOAD_CLICK_START = 3;
 
+    int DOWNLOAD_CANCEL = 8;
+
     /**
      * 对比版本号
      */

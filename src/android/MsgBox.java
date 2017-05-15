@@ -62,7 +62,7 @@ public class MsgBox {
      */
     public Map<String, Object> showDownloadDialog(OnClickListener onClickListenerNeg,
                                                   OnClickListener onClickListenerPos,
-                                                  OnClickListener onClickListenerNeu) {
+                                                  OnClickListener onClickListenerNeu, DialogInterface.OnCancelListener onCancelListener) {
         if (downloadDialog == null) {
             LOG.d(TAG, "showDownloadDialog");
 

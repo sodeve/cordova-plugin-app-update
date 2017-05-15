@@ -179,7 +179,7 @@ public class UpdateManager {
         Map<String, Object> ret = msgBox.showDownloadDialog(
                 downloadDialogOnClickNeg,
                 downloadDialogOnClickPos,
-                downloadDialogOnClickNeu);
+                downloadDialogOnClickNeu, noticeDialogOnCancel);
         // 下载文件
         downloadApk((AlertDialog) ret.get("dialog"), (ProgressBar) ret.get("progress"));
     }

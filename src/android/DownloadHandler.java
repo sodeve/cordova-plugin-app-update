@@ -90,7 +90,13 @@ public class DownloadHandler extends Handler {
         // 通过Intent安装APK文件
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        i.setDataAndType(Uri.parse("file://" + apkFile.toString()), "application/vnd.android.package-archive");
+        if(Build.VERSION.SDK_INT >= 24){
+            i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            Uri uri = FileProvider.getUriForFile(mContext, "com.vaenow.appupdate.android.provider", apkFile);
+            i.setDataAndType(uri, "application/vnd.android.package-archive");
+        }else {
+            i.setDataAndType(Uri.parse("file://" + apkFile.toString()), "application/vnd.android.package-archive");
+        }
         mContext.startActivity(i);
     }
 }

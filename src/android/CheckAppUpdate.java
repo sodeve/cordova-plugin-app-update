@@ -29,7 +29,7 @@ public class CheckAppUpdate extends CordovaPlugin {
             throws JSONException {
 
         if (action.equals("checkAppUpdate")) {
-            verifyStoragePermissions(this.cordova.getActivity());
+            verifyStoragePermissions();
             getUpdateManager(args, callbackContext).checkUpdate();
             return true;
         }
@@ -47,15 +47,11 @@ public class CheckAppUpdate extends CordovaPlugin {
         return this.updateManager.options(args, callbackContext);
     }
 
-    public static void verifyStoragePermissions(Activity activity) {
+    public static void verifyStoragePermissions() {
         // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(activity,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE,
-            REQUEST_EXTERNAL_STORAGE);
+        // and if we don't prompt the user
+        if (!cordova.hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            cordova.requestPermissions(this, REQUEST_EXTERNAL_STORAGE, PERMISSIONS_STORAGE);
         }
     }
 }

@@ -53,8 +53,8 @@ public class UpdateManager {
         msgBox = new MsgBox(mContext);
     }
 
-    public UpdateManager(JSONArray args, CallbackContext callbackContext, Context context) {
-        this(args, callbackContext, context, "http://192.168.3.102:8080/update_apk/version.xml");
+    public UpdateManager(JSONArray args, CallbackContext callbackContext, Context context, JSONObject options) {
+        this(args, callbackContext, context, "http://192.168.3.102:8080/update_apk/version.xml", options);
     }
 
     public UpdateManager(JSONArray args, CallbackContext callbackContext, Context context, String updateUrl, JSONObject options) {

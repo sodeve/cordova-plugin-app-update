@@ -47,7 +47,7 @@ public class CheckAppUpdate extends CordovaPlugin {
         return this.updateManager.options(args, callbackContext);
     }
 
-    public static void verifyStoragePermissions() {
+    public void verifyStoragePermissions() {
         // Check if we have write permission
         // and if we don't prompt the user
         if (!cordova.hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {

@@ -4,13 +4,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.DialogInterface.OnCancelListener;
 import android.os.Handler;
 import android.widget.ProgressBar;
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.LOG;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.json.JSONException;
 
 import java.util.ArrayList;
@@ -34,6 +34,7 @@ public class UpdateManager {
      *   </update>
      */
     private String updateXmlUrl;
+    private JSONObject options;
     private JSONArray args;
     private CordovaInterface cordova;
     private CallbackContext callbackContext;
@@ -56,10 +57,11 @@ public class UpdateManager {
         this(args, callbackContext, context, "http://192.168.3.102:8080/update_apk/version.xml");
     }
 
-    public UpdateManager(JSONArray args, CallbackContext callbackContext, Context context, String updateUrl) {
+    public UpdateManager(JSONArray args, CallbackContext callbackContext, Context context, String updateUrl, JSONObject options) {
         this.args = args;
         this.callbackContext = callbackContext;
         this.updateXmlUrl = updateUrl;
+        this.options = options;
         this.mContext = context;
         packageName = mContext.getPackageName();
         msgBox = new MsgBox(mContext);
@@ -70,6 +72,7 @@ public class UpdateManager {
         this.args = args;
         this.callbackContext = callbackContext;
         this.updateXmlUrl = args.getString(0);
+        this.options = args.getJSONObject(1);
         return this;
     }
 
@@ -235,7 +238,7 @@ public class UpdateManager {
         LOG.d(TAG, "downloadApk" + mProgress);
 
         // 启动新线程下载软件
-        downloadApkThread = new DownloadApkThread(mContext, mHandler, mProgress, mDownloadDialog, checkUpdateThread.getMHashMap());
+        downloadApkThread = new DownloadApkThread(mContext, mHandler, mProgress, mDownloadDialog, checkUpdateThread.getMHashMap(), options);
         this.cordova.getThreadPool().execute(downloadApkThread);
         // new Thread(downloadApkThread).start();
     }

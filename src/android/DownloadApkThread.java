@@ -8,7 +8,7 @@ import android.widget.ProgressBar;
 import android.util.Base64;
 import org.json.JSONObject;
 import org.json.JSONException;
-
+import org.apache.cordova.LOG;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

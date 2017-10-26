@@ -18,7 +18,7 @@ import java.util.Map;
  * Created by LuoWen on 2016/1/20.
  */
 public class MsgBox {
-    public static final String TAG = "MsgBox";
+    public static final String TAG = "com.vaenow.appupdate.android";
     private Context mContext;
     private MsgHelper msgHelper;
 

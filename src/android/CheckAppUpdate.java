@@ -14,7 +14,7 @@ import org.json.JSONException;
  * Created by LuoWen on 2015/10/27.
  */
 public class CheckAppUpdate extends CordovaPlugin {
-    public static final String TAG = "CheckAppUpdate";
+    public static final String TAG = "com.vaenow.appupdate.android";
 
     private UpdateManager updateManager = null;
 
@@ -25,20 +25,24 @@ public class CheckAppUpdate extends CordovaPlugin {
         Manifest.permission.WRITE_EXTERNAL_STORAGE };
 
     @Override
-    public boolean execute(String action, JSONArray args, CallbackContext callbackContext)
-            throws JSONException {
+    public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
 
         if (action.equals("checkAppUpdate")) {
             verifyStoragePermissions();
+			try {
             getUpdateManager(args, callbackContext).checkUpdate();
             return true;
+			}
+			catch (JSONException ej){
+				ej.printStackTrace();
+				return false;
+			}
         }
         callbackContext.error(Utils.makeJSON(Constants.NO_SUCH_METHOD, "no such method: " + action));
         return false;
     }
 
-    public UpdateManager getUpdateManager(JSONArray args, CallbackContext callbackContext)
-            throws JSONException {
+    public UpdateManager getUpdateManager(JSONArray args, CallbackContext callbackContext) throws JSONException {
 
         if (this.updateManager == null) {
             this.updateManager = new UpdateManager(this.cordova.getActivity(), this.cordova);

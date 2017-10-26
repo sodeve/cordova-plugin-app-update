@@ -1,7 +1,7 @@
 package com.vaenow.appupdate.android;
 
-import org.json.JSONException;
 import org.json.JSONObject;
+import org.json.JSONException;
 
 /**
  * Created by LuoWen on 16/7/22.

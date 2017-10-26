@@ -14,12 +14,13 @@ import android.widget.ProgressBar;
 import android.support.v4.content.FileProvider;
 import java.io.File;
 import java.util.HashMap;
+import org.apache.cordova.LOG;
 
 /**
  * Created by LuoWen on 2015/12/14.
  */
 public class DownloadHandler extends Handler {
-    private String TAG = "DownloadHandler";
+    private String TAG = "com.vaenow.appupdate.android";
 
     private Context mContext;
     /* 更新进度条 */
@@ -88,12 +89,16 @@ public class DownloadHandler extends Handler {
         if (!apkFile.exists()) {
             return;
         }
+        LOG.d(TAG, "mSavePath: " + mSavePath);
+        LOG.d(TAG, "apkFile: " + apkFile.getPath());
         // 通过Intent安装APK文件
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        LOG.d(TAG, "SDK version: " + Build.VERSION.SDK_INT);
         if(Build.VERSION.SDK_INT >= 24){
             i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            Uri uri = FileProvider.getUriForFile(mContext, "com.vaenow.appupdate.android.provider", apkFile);
+            Uri uri = FileProvider.getUriForFile(mContext, "com.vaenow.appupdate.android.provider.com.richlandlogistics.revotmionicTest", apkFile);
+            LOG.d(TAG, "URI: " + uri.getPath());
             i.setDataAndType(uri, "application/vnd.android.package-archive");
         }else {
             i.setDataAndType(Uri.parse("file://" + apkFile.toString()), "application/vnd.android.package-archive");

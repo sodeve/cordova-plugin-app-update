@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.util.Base64;
 import org.apache.cordova.LOG;
 import org.json.JSONObject;
-import org.json.JSONException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -22,7 +21,7 @@ import 	java.nio.charset.StandardCharsets;
  * Created by LuoWen on 2015/12/14.
  */
 public class CheckUpdateThread implements Runnable {
-    private String TAG = "CheckUpdateThread";
+    private String TAG = "com.vaenow.appupdate.android";
 
     /* 保存解析的XML信息 */
     HashMap<String, String> mHashMap;
@@ -30,7 +29,6 @@ public class CheckUpdateThread implements Runnable {
     private List<Version> queue;
     private String packageName;
     private String updateXmlUrl;
-    private JSONObject options;
     private Handler mHandler;
 
     private void setMHashMap(HashMap<String, String> mHashMap) {
@@ -41,18 +39,17 @@ public class CheckUpdateThread implements Runnable {
         return mHashMap;
     }
 
-    public CheckUpdateThread(Context mContext, Handler mHandler, List<Version> queue, String packageName, String updateXmlUrl, JSONObject options) throws JSONException {
+    public CheckUpdateThread(Context mContext, Handler mHandler, List<Version> queue, String packageName, String updateXmlUrl) {
         this.mContext = mContext;
         this.queue = queue;
         this.packageName = packageName;
         this.updateXmlUrl = updateXmlUrl;
-        this.options = options;
         this.mHandler = mHandler;
     }
 
     @Override
     public void run() {
-        try {
+       
             int versionCodeLocal = getVersionCodeLocal(mContext); // 获取当前软件版本
             int versionCodeRemote = getVersionCodeRemote();  //获取服务器当前软件版本
 
@@ -64,10 +61,7 @@ public class CheckUpdateThread implements Runnable {
             } else {
                 mHandler.sendEmptyMessage(Constants.VERSION_COMPARE_START);
             }
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
+        
     }
 
     /**
@@ -76,7 +70,7 @@ public class CheckUpdateThread implements Runnable {
      * @param path
      * @return
      */
-    private InputStream returnFileIS(String path) throws JSONException {
+    private InputStream returnFileIS(String path) {
         LOG.d(TAG, "returnFileIS..");
 
         URL url = null;
@@ -85,10 +79,12 @@ public class CheckUpdateThread implements Runnable {
         try {
             url = new URL(path);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();//利用HttpURLConnection对象,我们可以从网络中获取网页数据.
-            if(this.options.getString("authType").equals("basic")){
+
+            /*if(this.options.getString("authType").equals("basic")){
                 String encoded = Base64.encodeToString((this.options.getString("username")+":"+this.options.getString("password")).getBytes(StandardCharsets.UTF_8), Base64.DEFAULT);  //Java 8
                 conn.setRequestProperty("Authorization", "Basic "+encoded);
-            }
+            }*/
+
             conn.setDoInput(true);
             conn.connect();
             is = conn.getInputStream(); //得到网络返回的输入流
@@ -136,7 +132,7 @@ public class CheckUpdateThread implements Runnable {
      *
      * @return
      */
-    private int getVersionCodeRemote() throws JSONException {
+    private int getVersionCodeRemote() {
         int versionCodeRemote = 0;
 
         InputStream is = returnFileIS(updateXmlUrl);

@@ -5,6 +5,9 @@ import android.content.Context;
 import android.os.Environment;
 import android.os.Handler;
 import android.widget.ProgressBar;
+import android.util.Base64;
+import org.json.JSONObject;
+import org.json.JSONException;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -14,7 +17,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
-import org.apache.cordova.LOG;
+
+import 	java.nio.charset.StandardCharsets;
 
 /**
  * 下载文件线程
@@ -33,12 +37,14 @@ public class DownloadApkThread implements Runnable {
     private AlertDialog mDownloadDialog;
     private DownloadHandler downloadHandler;
     private Handler mHandler;
+    private JSONObject options;
 
     public DownloadApkThread(Context mContext, Handler mHandler, ProgressBar mProgress, AlertDialog mDownloadDialog,
-                             HashMap<String, String> mHashMap) {
+                             HashMap<String, String> mHashMap, JSONObject options) {
         this.mDownloadDialog = mDownloadDialog;
         this.mHashMap = mHashMap;
         this.mHandler = mHandler;
+        this.options = options;
 
         this.mSavePath = Environment.getExternalStorageDirectory() + "/" + "download"; // SD Path
         this.downloadHandler = new DownloadHandler(mContext, mProgress, mDownloadDialog, this.mSavePath, mHashMap);
@@ -64,6 +70,10 @@ public class DownloadApkThread implements Runnable {
                 LOG.d(TAG, "URL: " + mHashMap.get("url"));
                 // 创建连接
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                if(this.options.getString("authType").equals("basic")){
+                    String encoded = Base64.encodeToString((this.options.getString("username")+":"+this.options.getString("password")).getBytes(StandardCharsets.UTF_8), Base64.DEFAULT);  //Java 8
+                    conn.setRequestProperty("Authorization", "Basic "+encoded);
+                }
                 conn.connect();
                 // 获取文件大小
                 int length = conn.getContentLength();
@@ -107,6 +117,8 @@ public class DownloadApkThread implements Runnable {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e){
             e.printStackTrace();
         }
     }

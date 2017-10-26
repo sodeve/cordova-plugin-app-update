@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.DialogInterface.OnCancelListener;
 import android.os.Handler;
 import android.widget.ProgressBar;
 import org.apache.cordova.CallbackContext;
@@ -128,9 +129,13 @@ public class UpdateManager {
      */
     public void checkUpdate() {
         LOG.d(TAG, "checkUpdate..");
-
-        checkUpdateThread = new CheckUpdateThread(mContext, mHandler, queue, packageName, updateXmlUrl);
-        this.cordova.getThreadPool().execute(checkUpdateThread);
+        try {
+            checkUpdateThread = new CheckUpdateThread(mContext, mHandler, queue, packageName, updateXmlUrl, options);
+            this.cordova.getThreadPool().execute(checkUpdateThread);
+        }
+        catch (JSONException ex){
+            LOG.d(TAG, ex.toString());
+        }
         //new Thread(checkUpdateThread).start();
     }
 
@@ -166,6 +171,13 @@ public class UpdateManager {
         public void onClick(DialogInterface dialog, int which) {
             dialog.dismiss();
             mHandler.sendEmptyMessage(Constants.DOWNLOAD_CLICK_START);
+        }
+    };
+
+    private OnCancelListener noticeDialogOnCancel = new OnCancelListener() {
+        @Override
+        public void onCancel(DialogInterface dialog) {
+            mHandler.sendEmptyMessage(Constants.DOWNLOAD_CANCEL);
         }
     };
 

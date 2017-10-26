@@ -41,7 +41,7 @@ public class CheckUpdateThread implements Runnable {
         return mHashMap;
     }
 
-    public CheckUpdateThread(Context mContext, Handler mHandler, List<Version> queue, String packageName, String updateXmlUrl, JSONObject options) {
+    public CheckUpdateThread(Context mContext, Handler mHandler, List<Version> queue, String packageName, String updateXmlUrl, JSONObject options) throws JSONException {
         this.mContext = mContext;
         this.queue = queue;
         this.packageName = packageName;
@@ -52,16 +52,21 @@ public class CheckUpdateThread implements Runnable {
 
     @Override
     public void run() {
-        int versionCodeLocal = getVersionCodeLocal(mContext); // 获取当前软件版本
-        int versionCodeRemote = getVersionCodeRemote();  //获取服务器当前软件版本
+        try {
+            int versionCodeLocal = getVersionCodeLocal(mContext); // 获取当前软件版本
+            int versionCodeRemote = getVersionCodeRemote();  //获取服务器当前软件版本
 
-        queue.clear(); //ensure the queue is empty
-        queue.add(new Version(versionCodeLocal, versionCodeRemote));
+            queue.clear(); //ensure the queue is empty
+            queue.add(new Version(versionCodeLocal, versionCodeRemote));
 
-        if (versionCodeLocal == 0 || versionCodeRemote == 0) {
-            mHandler.sendEmptyMessage(Constants.VERSION_RESOLVE_FAIL);
-        } else {
-            mHandler.sendEmptyMessage(Constants.VERSION_COMPARE_START);
+            if (versionCodeLocal == 0 || versionCodeRemote == 0) {
+                mHandler.sendEmptyMessage(Constants.VERSION_RESOLVE_FAIL);
+            } else {
+                mHandler.sendEmptyMessage(Constants.VERSION_COMPARE_START);
+            }
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
@@ -71,7 +76,7 @@ public class CheckUpdateThread implements Runnable {
      * @param path
      * @return
      */
-    private InputStream returnFileIS(String path) {
+    private InputStream returnFileIS(String path) throws JSONException {
         LOG.d(TAG, "returnFileIS..");
 
         URL url = null;
@@ -131,7 +136,7 @@ public class CheckUpdateThread implements Runnable {
      *
      * @return
      */
-    private int getVersionCodeRemote() {
+    private int getVersionCodeRemote() throws JSONException {
         int versionCodeRemote = 0;
 
         InputStream is = returnFileIS(updateXmlUrl);
